@@ -21,22 +21,22 @@ const Encrypt = () => {
 
   return (
     <div>
-      <h1>Encrypt and Decrypt Example</h1>
-      <div>
+      <h1>Nouveau message</h1>
+      <div className="new-message">
         <textarea
-          type="text"
-          placeholder="Enter text to encrypt"
+          placeholder="Votre message"
           value={text}
+          className="textarea"
           onChange={(e) => setText(e.target.value)}
         ></textarea>
-        <button onClick={() => encryptText(text)}>Encrypt</button>
+        <button className="btn-send" onClick={() => encryptText(text)}>Envoyer votre message</button>
+      </div>
+      <div className='crypted-message-container'>
+        <p className='crypted-message'>{encryptedText}</p>
+        <button onClick={() => decryptText(encryptedText)}>Afficher le message</button>
       </div>
       <div>
-        <p>Encrypted Text: {encryptedText}</p>
-        <button onClick={() => decryptText(encryptedText)}>Decrypt</button>
-      </div>
-      <div>
-        <p>Decrypted Text: {decryptedText}</p>
+        <p>{decryptedText}</p>
       </div>
     </div>
   );
