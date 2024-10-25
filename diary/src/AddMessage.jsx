@@ -30,6 +30,39 @@ const AddMessage = () => {
         return decrypted;
       };
 
+      const deleteMessage = (index) => {
+        const newList = messageList.filter((item, idx) => idx !== index); 
+        setMessageList(newList); 
+      }
+
+        const editMessage = (index) => {
+            const item = messageList[index]; 
+            setToEditable(document.getElementsByClassName('decrypted-text').contenteditable = true);
+
+         
+            //récuperer decryptedText(item[1])
+    
+        }
+
+        const validateEdit = (index) => {
+            //get le nouveau decryptedText(item[1])
+            //set la value dans le tableau
+            const newDecryptedText = document.getElementsByClassName('decrypted-text').value;
+            const newList = messageList.map((item, idx) => { 
+                if(idx === index){
+                    item[1] = newDecryptedText;
+                }
+                return item;
+            } );
+        }
+    
+
+
+
+                    //indexOf x change de {decryptText(item[1])}
+            //pouvoir le valider et l'ajouter à la liste           
+        
+
     return(
         <div>
             <h1>Nouveau message</h1>
@@ -44,16 +77,22 @@ const AddMessage = () => {
             </div>
             <div>
             {messageList.map((item, index) => (
-                <table className='message-list'>
-                    <tr>
-                        <td>{index}</td>
-                        <td>{item[0]}</td>
-                        <td>{item[1]}</td>
-                        <br></br>
-                        <td>{decryptText(item[1])}</td>
-                        <br></br>
-                    </tr>
-                </table>
+                <div className='messages'>
+                    <table className='message-list'>
+                        <tr>
+                            <td>{index}</td>
+                            <td>{item[0]}</td>
+                            <td>{item[1]}</td>
+                            <br></br>
+                            <td className="decrypted-text" contenteditable="false">{decryptText(item[1])}</td>
+                            <br></br>
+                        </tr>
+                    </table>
+                    <button onClick={() => deleteMessage(index)}>Delete</button>
+                    <button onClick={() => editMessage(index)}>Modifier</button>
+                    <button onClick={() => validateEdit(index)}>Valider la modification</button>
+                </div>
+
             ))}
             </div>
         </div>
