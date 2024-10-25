@@ -11,7 +11,6 @@ const AddMessage = () => {
   const secretKey = 'my-secret-key';
 
   const encryptText = (title, text) => {
-    
     const encrypted = CryptoJS.AES.encrypt(text, secretKey).toString();
     setEncryptedText(encrypted);
 
