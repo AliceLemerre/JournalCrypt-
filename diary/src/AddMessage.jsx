@@ -3,63 +3,49 @@ import CryptoJS from 'crypto-js';
 import { MyContext } from './context/MyContext';
 
 const AddMessage = () => {
-    const { messageList, setMessageList } = useContext(MyContext);
-    const [encryptedText, setEncryptedText] = useState('');
-    const [text, setText] = useState('');
-    const [decryptedText, setDecryptedText] = useState('');
-    const secretKey = 'my-secret-key';
+  const { messageList, setMessageList } = useContext(MyContext);
+  const [encryptedText, setEncryptedText] = useState('');
+  const [text, setText] = useState('');
+  const [title, setTitle] = useState('');
 
-    const encryptText = (text) => {
+  const secretKey = 'my-secret-key';
 
-        const encrypted = CryptoJS.AES.encrypt(text, secretKey).toString();
-        setEncryptedText(encrypted);
+  const encryptText = (title, text) => {
+    const encrypted = CryptoJS.AES.encrypt(text, secretKey).toString();
+    setEncryptedText(encrypted);
 
-        let map = new Map();
-        let titre = 'Titre';
-        map.set(titre, encrypted);
+    const newMessage = [title, encrypted];
 
-        setMessageList((prevValues) => [...prevValues, Array.from(map.entries())[0]]);
-        console.log(messageList)
-      };
+    setMessageList((prevValues) => [...prevValues, newMessage]);
 
-      const decryptText = (encryptedText) => {
+    setTitle('');
+    setText('');
+  };
 
-        const bytes = CryptoJS.AES.decrypt(encryptedText, secretKey);
-        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-        // setDecryptedText(decrypted);
-        return decrypted;
-      };
-
-    return(
-        <div>
-            <h1>Nouveau message</h1>
-            <div className="new-message">
-                <textarea
-                placeholder="Votre message"
-                value={text}
-                className="textarea"
-                onChange={(e) => setText(e.target.value)}
-                ></textarea>
-                <button className="btn-send" onClick={() => encryptText(text)}>Envoyer votre message</button>
-            </div>
-            <div>
-            {messageList.map((item, index) => (
-                <table className='message-list'>
-                    <tr>
-                        <td>{index}</td>
-                        <td>{item[0]}</td>
-                        <td>{item[1]}</td>
-                        <br></br>
-                        <td>{decryptText(item[1])}</td>
-                        <br></br>
-                    </tr>
-                </table>
-            ))}
-            </div>
-        </div>
-    
-    );
-
+  return (
+    <div>
+      <h1>Journal Intime</h1>
+      <h2>Ajouter un message</h2>
+      <div className="new-message">
+        <input
+          type="text"
+          placeholder="Titre"
+          value={title}
+          className="input-title"
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <textarea
+          placeholder="Votre message"
+          value={text}
+          className="textarea"
+          onChange={(e) => setText(e.target.value)}
+        ></textarea>
+        <button className="btn-send" onClick={() => encryptText(title, text)}>
+          Envoyer votre message
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default AddMessage;
