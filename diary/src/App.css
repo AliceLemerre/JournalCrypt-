@@ -36,3 +36,29 @@
     transform: rotate(360deg);
   }
 }
+
+.new-message{
+  display: grid;
+  justify-content: center;
+  gap: 15px;
+}
+
+.textarea{
+  width: 500px;
+  height: 100px;
+}
+
+.btn-send{
+  width: 35%;
+  margin: auto;
+  height: 30px;
+  border-radius: 10px;
+}
+
+.crypted-message{
+  max-width: 500px;
+  text-wrap: wrap;
+  word-wrap: break-word;
+  margin-left: auto;
+  margin-right: auto;
+}
