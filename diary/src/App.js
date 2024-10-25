@@ -1,25 +1,19 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import Encrypt from '../src/encrypt/encrypt';
+import AddMessage from '../src/AddMessage';
 import './App.css';
+import { useState, React, useContext } from "react";
+import { MyContext } from "./context/MyContext";
 
 function App() {
+  const [messageList, setMessageList] = useState([]);
   return (
     <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
-      <Encrypt></Encrypt>
+      <div>
+        <MyContext.Provider value={{ messageList, setMessageList }}>
+          <AddMessage />
+        </MyContext.Provider>
+      </div>
     </div>
   );
 }
