@@ -32,15 +32,17 @@ const AddMessage = () => {
           placeholder="Titre"
           value={title}
           className="input-title"
+          data-testid="input-title"
           onChange={(e) => setTitle(e.target.value)}
         />
         <textarea
           placeholder="Votre message"
           value={text}
           className="textarea"
+          data-testid="textarea"
           onChange={(e) => setText(e.target.value)}
         ></textarea>
-        <button className="btn-send" onClick={() => encryptText(title, text)}>
+        <button data-testid="btn-send" onClick={() => encryptText(title, text)}>
           Envoyer votre message
         </button>
       </div>
