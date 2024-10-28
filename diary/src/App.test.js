@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import App from './App';
+import { MyProvider } from './context/MyContext';
+import CryptoJS from 'crypto-js';
 
 test('présence éléments', () => {
   render(<App />);
@@ -19,38 +21,33 @@ test('présence éléments', () => {
 //est-ce que encrypt est appelée pour le texte et ?
 });
 
-
 //USER ACTIONS
 
-test('ajouter un message', () => {
-  const user = userEvent.setup();
-  render(<App />);
+test('ajouter un message', async () => {
+  // const user = userEvent.setup();
+  render(<App />)
 
   //pouvoir remplir le titre
   const inputTitle = screen.getByTestId('input-title');
-
   userEvent.type(screen.getByTestId('input-title'), 'Titre du message');
-  expect(screen.inputTitle).toHaveValue('Titre du message');
+  expect(inputTitle).toHaveValue('Titre du message');
 
    //event écrire
     const textArea = screen.getByTestId('textarea');
-
-   userEvent.type(screen.textArea, 'Ceci est un message');
-   expect(screen.textArea).toHaveValue('Ceci est un message');
+   userEvent.type(textArea, 'Ceci est un message');
+   expect(textArea).toHaveValue('Ceci est un message');
 
   //pouvoir cliquer sur le bouton envoyer/appelle fonction encrypter
   userEvent.click(screen.getByTestId('btn-send'));
+  //RAF voir si la fonction encrypt a été appelée
+  
+  //le titre s'ajoute bien à la liste
+  const newMessageTitle = await screen.findByText('Titre du message');
+  expect(newMessageTitle).toBeInTheDocument();
 
-  //le message s'ajoute bien à la liste
-  const tableRows = screen.getAllByRole('row');
-  expect(tableRows.length).toBe(2);
-
-  // checker le message ajouté
-  const messageRow = tableRows[1];
-  expect(messageRow).toHaveTextContent('Titre du message');
-  expect(messageRow).toHaveTextContent('0');
-  expect(messageRow.children[2]).toHaveTextContent();
-
+  const tbody = screen.getByTestId('tbody');
+  // eslint-disable-next-line testing-library/no-node-access
+  expect(tbody.querySelectorAll('tr').length).toBe(1);
 });
 
 

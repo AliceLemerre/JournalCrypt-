@@ -76,7 +76,7 @@ const ReadMessages = () => {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-testid="tbody">
           {messageList.map((item, index) => (
             <tr key={index}>
               <td>{index}</td>
