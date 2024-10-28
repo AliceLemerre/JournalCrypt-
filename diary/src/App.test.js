@@ -45,6 +45,7 @@ test('ajouter un message', async () => {
   const newMessageTitle = await screen.findByText('Titre du message');
   expect(newMessageTitle).toBeInTheDocument();
 
+  //Vérifier si une tr a été ajoutée au tbody
   const tbody = screen.getByTestId('tbody');
   // eslint-disable-next-line testing-library/no-node-access
   expect(tbody.querySelectorAll('tr').length).toBe(1);
