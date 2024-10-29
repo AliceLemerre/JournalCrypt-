@@ -81,7 +81,7 @@ const ReadMessages = () => {
             <tr key={index}>
               <td>{index}</td>
               <td>{item[0]}</td>
-              <td onClick={() => handleDecryptClick(index)} style={{ cursor: 'pointer', color: 'blue' }}>
+              <td data-testid="btn-decrypt" onClick={() => handleDecryptClick(index)} style={{ cursor: 'pointer', color: 'blue' }}>
                 {item[1]}
               </td>
               <td>{selectedMessage === index ? decryptedText : ''}</td>
@@ -91,13 +91,14 @@ const ReadMessages = () => {
                     value={editableText}
                     onChange={(e) => setEditableText(e.target.value)}
                     className="edit-textarea"
+                    data-testid="edit-textarea"
                   />
                 )}
-                <button onClick={() => deleteMessage(index)}>Delete</button>
+                <button data-testid="btn-delete" onClick={() => deleteMessage(index)}>Delete</button>
                 {editingIndex === index ? (
-                  <button onClick={() => validateEdit(index)}>Valider</button>
+                  <button data-testid="btn-validate-edit" onClick={() => validateEdit(index)}>Valider</button>
                 ) : (
-                  <button onClick={() => editMessage(index)}>Modifier</button>
+                  <button data-testid="btn-edit" onClick={() => editMessage(index)}>Modifier</button>
                 )}
               </td>
             </tr>
