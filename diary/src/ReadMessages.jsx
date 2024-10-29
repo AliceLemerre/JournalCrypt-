@@ -88,6 +88,7 @@ const ReadMessages = () => {
               <td>
                 {editingIndex === index && (
                   <textarea
+                    data-testid="update-textarea"
                     value={editableText}
                     onChange={(e) => setEditableText(e.target.value)}
                     className="edit-textarea"
@@ -106,11 +107,12 @@ const ReadMessages = () => {
       </table>
 
       {showPopup && (
-        <div className="popup">
+        <div className="popup" data-testid="popup">
           <div className="popup-content">
             <h3>Enter Secret Key</h3>
             <input
               type="text"
+              data-testid="secret-key-input"
               value={secretKey}
               onChange={(e) => setSecretKey(e.target.value)}
               placeholder="Enter secret key"
