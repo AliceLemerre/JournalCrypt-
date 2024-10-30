@@ -20,10 +20,6 @@ test('présence éléments', () => {
   expect(TitreH1).toBeInTheDocument();
   expect(textarea).toBeInTheDocument();
   expect(buttonSendMessage).toBeInTheDocument();
-//est-ce qu'un élément contient le titre
-//est-ce qu'un élément contient le message crypté
-//est-ce qu'un élément contient l'id
-//est-ce que encrypt est appelée pour le texte et ?
 });
 
 
@@ -138,7 +134,7 @@ test('modifier message', async () => {
   const cancelBtn = await screen.findByText('Cancel');
 
   expect(decryptBtn).toBeInTheDocument();
-  expect(cancelBtn).toBeInTheDocument();
+  expect(cancelBtn).toBeInTheDocument(); //faire cancel event
 
   fireEvent.click(decryptBtn);
   expect(popup).not.toBeInTheDocument();
@@ -154,7 +150,38 @@ test('modifier message', async () => {
   const btnValidate = await screen.findByText('Valider');   
   expect(btnValidate).toBeInTheDocument();
 
-  //todo : après avoir modifié, clic sur le message crypté pour l'update avec le mdp
+
+  //ouverture du popup puis fermeture 
+  fireEvent.click(btnUpdate);
+  expect(popup).toBeInTheDocument();
+  fireEvent.click(cancelBtn);
+  expect(popup).not.toBeInTheDocument();
+
+
+  //après avoir modifié, clic sur le message crypté pour l'update avec le mdp
+  //ça réaffiche tout le popup
+  const encryptedMessage = screen.getByTestId('encrypted-message');
+  fireEvent.click(encryptedMessage);
+
+  expect(popup).toBeInTheDocument();
+  expect(secretKeyInput).toBeInTheDocument();
+  expect(popupTitle).toBeInTheDocument();
+
+  userEvent.type(secretKeyInput, 'my-secret-key');
+  expect(secretKeyInput).toHaveValue('my-secret-key');
+
+  expect(decryptBtn).toBeInTheDocument();
+  expect(cancelBtn).toBeInTheDocument(); 
+
+  fireEvent.click(decryptBtn);
+  expect(popup).not.toBeInTheDocument();
+  expect(secretKeyInput).not.toBeInTheDocument();
+  expect(popupTitle).not.toBeInTheDocument();
+
+  expect(updateTextarea).toHaveValue('Ceci est un message modifié');
+
+
+
   
 });
 
@@ -187,4 +214,3 @@ test('lire un message', () => {
 
 });
 */
-
