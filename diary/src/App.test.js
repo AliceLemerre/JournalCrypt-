@@ -20,10 +20,6 @@ test('présence éléments', () => {
   expect(TitreH1).toBeInTheDocument();
   expect(textarea).toBeInTheDocument();
   expect(buttonSendMessage).toBeInTheDocument();
-//est-ce qu'un élément contient le titre
-//est-ce qu'un élément contient le message crypté
-//est-ce qu'un élément contient l'id
-//est-ce que encrypt est appelée pour le texte et ?
 });
 
 
