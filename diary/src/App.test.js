@@ -154,37 +154,34 @@ test('modifier message', async () => {
   const btnValidate = await screen.findByText('Valider');   
   expect(btnValidate).toBeInTheDocument();
 
-  //todo : après avoir modifié, clic sur le message crypté pour l'update avec le mdp
+
+  //ouverture du popup puis fermeture 
+  fireEvent.click(btnUpdate);
+  expect(popup).toBeInTheDocument();
+  fireEvent.click(cancelBtn);
+  expect(popup).not.toBeInTheDocument();
+
+
+  //après avoir modifié, clic sur le message crypté pour l'update avec le mdp
+  //ça réaffiche tout le popup
+  const encryptedMessage = screen.getByTestId('encrypted-message');
+  fireEvent.click(encryptedMessage);
+
+  expect(popup).toBeInTheDocument();
+  expect(secretKeyInput).toBeInTheDocument();
+  expect(popupTitle).toBeInTheDocument();
+
+  userEvent.type(secretKeyInput, 'my-secret-key');
+  expect(secretKeyInput).toHaveValue('my-secret-key');
+
+  expect(decryptBtn).toBeInTheDocument();
+  expect(cancelBtn).toBeInTheDocument(); 
+
+  fireEvent.click(decryptBtn);
+  expect(popup).not.toBeInTheDocument();
+  expect(secretKeyInput).not.toBeInTheDocument();
+  expect(popupTitle).not.toBeInTheDocument();
+
+  expect(updateTextarea).toHaveValue('Ceci est un message modifié');
   
 });
-
-
-/*
-
-test('lire un message', () => {
-
-  //pouvoir decrypter (appelle la fonction decryptText)
-  userEvent.click(screen.getByTestId('btn-decrypt'))
-
-  //pouvoir cancel mdp
-  userEvent.click(screen.getByTestId('btn-cancel'))
-  expect(screen.getByTestId('btn-cancel')).toBeNull()
-
-  //pouvoir valider mdp
-  userEvent.click(screen.getByTestId('btn-validate'))
-  
-
-  //pouvoir modifier et valider la modif
-  userEvent.click(screen.getByTestId('btn-edit'))
-
-
-  //pouvoir  supprimer
-  userEvent.click(screen.getByTestId('btn-delete'))
-
-
-
-  
-
-});
-*/
-

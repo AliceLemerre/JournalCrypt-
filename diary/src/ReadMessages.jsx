@@ -81,7 +81,7 @@ const ReadMessages = () => {
             <tr key={index}>
               <td>{index}</td>
               <td>{item[0]}</td>
-              <td onClick={() => handleDecryptClick(index)} style={{ cursor: 'pointer', color: 'blue' }}>
+              <td data-testid="encrypted-message" onClick={() => handleDecryptClick(index)} style={{ cursor: 'pointer', color: 'blue' }}>
                 {item[1]}
               </td>
               <td>{selectedMessage === index ? decryptedText : ''}</td>
