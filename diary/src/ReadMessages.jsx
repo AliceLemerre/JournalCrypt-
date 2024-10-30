@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import CryptoJS from 'crypto-js';
 import { MyContext } from './context/MyContext';
+import { decryptText, deleteMessage } from './encryptionUtils';
 
 const ReadMessages = () => {
   const { messageList, setMessageList } = useContext(MyContext);
@@ -12,9 +13,9 @@ const ReadMessages = () => {
   const [editableText, setEditableText] = useState('');
 
   const handleDecryptClick = (messageIndex) => {
+    setShowPopup(true);
     setDecryptedText('');
     setSelectedMessage(messageIndex);
-    setShowPopup(true);
   };
 
   const handleDecrypt = () => {
@@ -29,8 +30,8 @@ const ReadMessages = () => {
     }
   };
 
-  const deleteMessage = (index) => {
-    const newList = messageList.filter((item, idx) => idx !== index); 
+  const handleDeleteMessage = (index) => {
+    const newList = deleteMessage(index, messageList); 
     setMessageList(newList); 
   };
 
@@ -54,16 +55,6 @@ const ReadMessages = () => {
     setSecretKey('');
   };
 
-  const decryptText = (encryptedText, secretKey) => {
-    try {
-      const bytes = CryptoJS.AES.decrypt(encryptedText, secretKey);
-      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-      return decrypted || 'Invalid Secret Key';
-    } catch (error) {
-      return 'Decryption Failed';
-    }
-  };
-
   return (
     <div>
       <table>
@@ -84,7 +75,7 @@ const ReadMessages = () => {
               <td data-testid="encrypted-message" onClick={() => handleDecryptClick(index)} style={{ cursor: 'pointer', color: 'blue' }}>
                 {item[1]}
               </td>
-              <td>{selectedMessage === index ? decryptedText : ''}</td>
+              <td data-testid="decrypted-message">{selectedMessage === index ? decryptedText : ''}</td>
               <td>
                 {editingIndex === index && (
                   <textarea
@@ -94,7 +85,7 @@ const ReadMessages = () => {
                     className="edit-textarea"
                   />
                 )}
-                <button onClick={() => deleteMessage(index)}>Delete</button>
+                <button onClick={() => handleDeleteMessage(index)}>Delete</button>
                 {editingIndex === index ? (
                   <button onClick={() => validateEdit(index)}>Valider</button>
                 ) : (

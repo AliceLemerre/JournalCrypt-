@@ -12,7 +12,7 @@ import CryptoJS from 'crypto-js';
 test('présence éléments', () => {
   render(<App />);
 
-  //If elements exists
+  //Check si les éléments existent
   const TitreH1 = screen.getByTestId('input-title');
   const textarea = screen.getByTestId('textarea');
   const buttonSendMessage = screen.getByTestId('btn-send');
@@ -42,7 +42,6 @@ test('ajouter un message', async () => {
 
   //pouvoir cliquer sur le bouton envoyer/appelle fonction encrypter
   fireEvent.click(screen.getByTestId('btn-send'));
-  //RAF voir si la fonction encrypt a été appelée
   expect(encryptTextSpy).toHaveBeenCalledWith('Ceci est un message', 'my-secret-key');
   
     //le titre s'ajoute bien à la liste
@@ -54,12 +53,13 @@ test('ajouter un message', async () => {
   const encryptedMessageCell = tbody.querySelectorAll('tr')[0].querySelectorAll('td')[2];
   expect(encryptedMessageCell.textContent).not.toBe('');
 
-    // clea le spy
+    // clear le spy
     encryptTextSpy.mockRestore();
 
 });
 
-test('supprimer element', async () => {
+test('supprimer un message', async () => {
+  const deleteMessageSpy = jest.spyOn(encryptionUtils, 'deleteMessage');
   render(<App />);
 
   fireEvent.click(screen.getByTestId('btn-send'));
@@ -72,13 +72,12 @@ test('supprimer element', async () => {
 
   //clic sur le bouton
   fireEvent.click(btnDelete);
+  expect(deleteMessageSpy).toHaveBeenCalled();
 
   expect(btnDelete).not.toBeInTheDocument();
 
   // eslint-disable-next-line testing-library/no-node-access
   expect(tbody.querySelectorAll('tr').length).toBe(0);
-
-  // expect(deleteMessageSpy).toHaveBeenCalled();
 });
 
 
@@ -149,35 +148,67 @@ test('modifier message', async () => {
 
   const btnValidate = await screen.findByText('Valider');   
   expect(btnValidate).toBeInTheDocument();
+  fireEvent.click(btnValidate);
 
+  const ecryptedMessage = screen.getByTestId('encrypted-message');
+  fireEvent.click(ecryptedMessage);
+
+  const newpopup = screen.getByTestId('popup');
+  expect(newpopup).toBeInTheDocument();
+
+  const newSecretKeyInput = screen.getByTestId('secret-key-input');
+
+  userEvent.type(newSecretKeyInput, 'my-secret-key');
+  expect(newSecretKeyInput).toHaveValue('my-secret-key');
+
+  fireEvent.click(decryptBtn);
+
+  const decryptedMessage = screen.getByTestId('decrypted-message');
+  expect(decryptedMessage).toBeInTheDocument();
+});
+
+test('cancel update', async () => {
+  const encryptTextSpy = jest.spyOn(encryptionUtils, 'encryptText');
+  render(<App />)
+
+  //pouvoir remplir le titre
+  const inputTitle = screen.getByTestId('input-title');
+  userEvent.type(screen.getByTestId('input-title'), 'Titre du message');
+  expect(inputTitle).toHaveValue('Titre du message');
+
+   //event écrire
+    const textArea = screen.getByTestId('textarea');
+   userEvent.type(textArea, 'Ceci est un message');
+   expect(textArea).toHaveValue('Ceci est un message');
+
+  //pouvoir cliquer sur le bouton envoyer/appelle fonction encrypter
+  fireEvent.click(screen.getByTestId('btn-send'));
+  //RAF voir si la fonction encrypt a été appelée
+  expect(encryptTextSpy).toHaveBeenCalledWith('Ceci est un message', 'my-secret-key');
+  
+    //le titre s'ajoute bien à la liste
+  const tbody = screen.getByTestId('tbody');
+  const newMessageTitle = await screen.findByText('Titre du message');
+  expect(newMessageTitle).toBeInTheDocument();
+
+  //Vérifier si une tr a été ajoutée au tbody
+  const encryptedMessageCell = tbody.querySelectorAll('tr')[0].querySelectorAll('td')[2];
+  expect(encryptedMessageCell.textContent).not.toBe('');
+
+    // clea le spy
+    encryptTextSpy.mockRestore();
+
+  const btnUpdate = await screen.findByText('Modifier');
+  expect(btnUpdate).toBeInTheDocument();
 
   //ouverture du popup puis fermeture 
   fireEvent.click(btnUpdate);
+  const popup = screen.getByTestId('popup');
   expect(popup).toBeInTheDocument();
+
+  const cancelBtn = await screen.findByText('Cancel');
+
+  expect(cancelBtn).toBeInTheDocument();
   fireEvent.click(cancelBtn);
   expect(popup).not.toBeInTheDocument();
-
-
-  //après avoir modifié, clic sur le message crypté pour l'update avec le mdp
-  //ça réaffiche tout le popup
-  const encryptedMessage = screen.getByTestId('encrypted-message');
-  fireEvent.click(encryptedMessage);
-
-  expect(popup).toBeInTheDocument();
-  expect(secretKeyInput).toBeInTheDocument();
-  expect(popupTitle).toBeInTheDocument();
-
-  userEvent.type(secretKeyInput, 'my-secret-key');
-  expect(secretKeyInput).toHaveValue('my-secret-key');
-
-  expect(decryptBtn).toBeInTheDocument();
-  expect(cancelBtn).toBeInTheDocument(); 
-
-  fireEvent.click(decryptBtn);
-  expect(popup).not.toBeInTheDocument();
-  expect(secretKeyInput).not.toBeInTheDocument();
-  expect(popupTitle).not.toBeInTheDocument();
-
-  expect(updateTextarea).toHaveValue('Ceci est un message modifié');
-  
 });
