@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import CryptoJS from 'crypto-js';
 import { MyContext } from './context/MyContext';
+import { encryptText } from './encryptionUtils';
 
 const AddMessage = () => {
   const { messageList, setMessageList } = useContext(MyContext);
@@ -10,14 +11,10 @@ const AddMessage = () => {
 
   const secretKey = 'my-secret-key';
 
-  const encryptText = (title, text) => {
-    const encrypted = CryptoJS.AES.encrypt(text, secretKey).toString();
-    setEncryptedText(encrypted);
-
+  const handleEncryptAndAddMessage = () => {
+    const encrypted = encryptText(text, secretKey);
     const newMessage = [title, encrypted];
-
     setMessageList((prevValues) => [...prevValues, newMessage]);
-
     setTitle('');
     setText('');
   };
@@ -32,15 +29,17 @@ const AddMessage = () => {
           placeholder="Titre"
           value={title}
           className="input-title"
+          data-testid="input-title"
           onChange={(e) => setTitle(e.target.value)}
         />
         <textarea
           placeholder="Votre message"
           value={text}
           className="textarea"
+          data-testid="textarea"
           onChange={(e) => setText(e.target.value)}
         ></textarea>
-        <button className="btn-send" onClick={() => encryptText(title, text)}>
+        <button data-testid="btn-send" onClick={handleEncryptAndAddMessage}>
           Envoyer votre message
         </button>
       </div>
